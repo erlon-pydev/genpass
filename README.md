@@ -1,0 +1,2 @@
+# genpass
+Strong password generator
