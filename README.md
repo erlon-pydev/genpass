@@ -1,2 +1,2 @@
 # genpass
-Strong password generator
+A secure and easy-to-use password generator!
