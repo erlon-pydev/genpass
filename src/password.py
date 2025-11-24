@@ -48,6 +48,21 @@ class PasswordGen:
     __LENGTH = secrets.choice(range(__RANGE.min, __RANGE.max + 1))
     __CHARS = PasswordCharsSet()
 
+    @classmethod
+    def __delete_chars(cls, seq: str) -> tuple[str, ...]:
+        if not seq:
+            return cls.__CHARS.set
+
+        chars: list[str] = list(PasswordGen.__CHARS.set)
+
+        for index, chars_set in enumerate(chars):
+            for s in seq:
+                if s in chars_set:
+                    chars[index] = chars[index].replace(s, '')
+
+        return tuple(chars)
+
+
     @staticmethod
     def generate(length: int = __LENGTH) -> str:
         """Generates a random and secure password."""
