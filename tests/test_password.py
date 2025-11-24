@@ -18,6 +18,11 @@ def test_Password_length(password: Password) -> None:
     assert pwd_length.min <= len(password) <= pwd_length.max
 
 
+def test_Password_set_length() -> None:
+    password = Password(36)
+    assert len(password) == 36
+
+
 def test_Password_chars(password: Password) -> None:
     chars_set: tuple[str, ...] = PasswordCharsSet().set
 
@@ -29,3 +34,11 @@ def test_Password_chars(password: Password) -> None:
         )
 
     assert all(check_chars)
+
+
+def test_Password_delete_chars() -> None:
+    chars_to_delete = '@#$&!12345abcdeFGHIJ'
+    password = Password(delete=chars_to_delete)
+    assert (
+        set(chars_to_delete) - set(password.to_str()) == set(chars_to_delete)
+    )
