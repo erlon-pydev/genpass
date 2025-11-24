@@ -44,16 +44,13 @@ class PasswordGen:
 
     __slots__ = ()
 
-    __LEN_RANGE = PasswordLengthRange()
+    __RANGE = PasswordLengthRange()
+    __LENGTH = secrets.choice(range(__RANGE.min, __RANGE.max + 1))
     __CHARS = PasswordCharsSet()
 
     @staticmethod
     def generate() -> str:
         """Generates a random and secure password."""
-
-        length = secrets.choice(
-            range(PasswordGen.__LEN_RANGE.min, PasswordGen.__LEN_RANGE.max + 1)
-        )
 
         password: list[str] = [
             secrets.choice(char_set) for char_set in PasswordGen.__CHARS.set
@@ -61,7 +58,7 @@ class PasswordGen:
 
         chars = ''.join(PasswordGen.__CHARS.set)
 
-        remaining_len = length - len(password)
+        remaining_len = PasswordGen.__LENGTH - len(password)
 
         password += [secrets.choice(chars) for _ in range(remaining_len)]
 
