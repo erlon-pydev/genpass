@@ -18,13 +18,17 @@ class PasswordCharsSet:
         punctuation,
     )
 
+
 class Password:
     """Password Generator"""
 
     __slots__ = ('__password',)
 
-    def __init__(self) -> None:
-        self.__password = PasswordGen.generate()
+    __RANGE = PasswordLengthRange()
+    __LENGTH = secrets.choice(range(__RANGE.min, __RANGE.max + 1))
+
+    def __init__(self, length: int = __LENGTH, delete: str = '') -> None:
+        self.__password = PasswordGen.generate(length, delete)
 
     def __str__(self) -> str:
         return self.__password
@@ -44,8 +48,6 @@ class PasswordGen:
 
     __slots__ = ()
 
-    __RANGE = PasswordLengthRange()
-    __LENGTH = secrets.choice(range(__RANGE.min, __RANGE.max + 1))
     __CHARS = PasswordCharsSet()
 
     @classmethod
@@ -63,15 +65,17 @@ class PasswordGen:
         return tuple(chars)
 
 
-    @staticmethod
-    def generate(length: int = __LENGTH) -> str:
+    @classmethod
+    def generate(cls, length: int, delete: str) -> str:
         """Generates a random and secure password."""
 
+        chars = cls.__delete_chars(delete)
+
         password: list[str] = [
-            secrets.choice(char_set) for char_set in PasswordGen.__CHARS.set
+            secrets.choice(char_set) for char_set in chars
         ]
 
-        chars = ''.join(PasswordGen.__CHARS.set)
+        chars = ''.join(chars)
 
         remaining_len = length - len(password)
 
