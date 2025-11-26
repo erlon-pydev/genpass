@@ -24,10 +24,7 @@ class Password:
 
     __slots__ = ('__password',)
 
-    __RANGE = PasswordLengthRange()
-    __LENGTH = secrets.choice(range(__RANGE.min, __RANGE.max + 1))
-
-    def __init__(self, length: int = __LENGTH, delete: str = '') -> None:
+    def __init__(self, length: int | None = None, delete: str = '') -> None:
         self.__password = PasswordGen.generate(length, delete)
 
     def __str__(self) -> str:
@@ -49,6 +46,7 @@ class PasswordGen:
     __slots__ = ()
 
     __CHARS = PasswordCharsSet()
+    __RANGE = PasswordLengthRange()
 
     @classmethod
     def __delete_chars(cls, seq: str) -> tuple[str, ...]:
@@ -66,8 +64,14 @@ class PasswordGen:
 
 
     @classmethod
-    def generate(cls, length: int, delete: str) -> str:
+    def generate(cls, length: int | None, delete: str) -> str:
         """Generates a random and secure password."""
+
+        random_length = secrets.choice(
+            range(cls.__RANGE.min, cls.__RANGE.max + 1)
+        )
+
+        _length = length if length else random_length
 
         chars = cls.__delete_chars(delete)
 
@@ -77,7 +81,7 @@ class PasswordGen:
 
         chars = ''.join(chars)
 
-        remaining_len = length - len(password)
+        remaining_len = _length - len(password)
 
         password += [secrets.choice(chars) for _ in range(remaining_len)]
 
